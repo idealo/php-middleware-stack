@@ -53,7 +53,7 @@ class Stack implements StackInterface
           );
     }
 
-    public function obtainDelegateFrame(ServerMiddlewareInterface $middleware)
+    public function obtainDelegateFrame(ServerMiddlewareInterface $middleware) : DelegateInterface
     {
         return new class ($this->defaultResponse, $this->withoutMiddleware($middleware)) implements DelegateInterface {
             public function __construct(ResponseInterface $response, StackInterface $stackFrame)
