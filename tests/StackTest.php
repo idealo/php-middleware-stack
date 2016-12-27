@@ -37,6 +37,27 @@ class StackTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
     }
 
+     public function testServerMiddlewareWithMiddlewareStack()
+    {
+        $middleware1 = new MiddlewareStub();
+        $middleware2 = new MiddlewareStub();
+        $middleware3 = new MiddlewareStub();
+
+        $serverRequest = $this->getServerRequestMock();
+
+        $serverRequest
+      ->expects($this->exactly(4))
+      ->method('getBody');
+
+        $response = $this->getMockBuilder(ResponseInterface::class)
+      ->getMock();
+
+        $stack = new Stack($response, $middleware1, $middleware2, $middleware3);
+        $enchencedStack = $stack->withMiddleware(new MiddlewareStub());
+        $stackResponse = $enchencedStack->process($serverRequest);
+        $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
+    }
+
     private function getServerRequestMock()
     {
         return $this->getMockBuilder(ServerRequestInterface::class)
@@ -79,7 +100,7 @@ class MiddlewareStub implements ServerMiddlewareInterface
 {
     public function process(ServerRequestInterface $request, DelegateInterface $frame) : ResponseInterface
     {
-        $request->getBody();
+        $body = $request->getBody();
 
         return $frame->next($request);
     }

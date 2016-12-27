@@ -24,7 +24,7 @@ class Stack implements StackInterface
     {
         return new self(
           $this->defaultResponse,
-          array_merge($this->middlewares, [$middleware]));
+          ...array_merge($this->middlewares, [$middleware]));
     }
 
     public function withoutMiddleware(MiddlewareInterface $middleware) : StackInterface

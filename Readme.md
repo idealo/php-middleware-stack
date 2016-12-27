@@ -1,5 +1,5 @@
 # PHP Middleware Stack
-[![Build Status](https://travis-ci.org/idealo/php-middleware-stack.svg?branch=master)](https://travis-ci.com/idealo/php-middleware-stack)
+[![Build Status](https://travis-ci.com/idealo/php-middleware-stack.svg?branch=master)](https://travis-ci.com/idealo/php-middleware-stack)
 
 
 This is an implementation of [PSR-15 Draft](https://github.com/php-fig/fig-standards/blob/master/proposed/http-middleware/middleware.md) for PHP7+ runtime environment.
