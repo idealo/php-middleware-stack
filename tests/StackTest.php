@@ -35,9 +35,10 @@ class StackTest extends TestCase
         $stack = new Stack($response, $middleware1, $middleware2, $middleware3);
         $stackResponse = $stack->process($serverRequest);
         $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
+        $this->assertTrue($stackResponse===$response);
     }
 
-     public function testServerMiddlewareWithMiddlewareStack()
+    public function testServerMiddlewareWithMiddlewareStack()
     {
         $middleware1 = new MiddlewareStub();
         $middleware2 = new MiddlewareStub();
@@ -56,6 +57,33 @@ class StackTest extends TestCase
         $enchencedStack = $stack->withMiddleware(new MiddlewareStub());
         $stackResponse = $enchencedStack->process($serverRequest);
         $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
+        $this->assertTrue($stackResponse===$response);
+    }
+
+
+    public function testServerMiddlewareWithMiddlewareResponse()
+    {
+        $middlewareResponse = $this->getMockBuilder(ResponseInterface::class)
+    ->getMock();
+
+        $middleware1 = new MiddlewareStub();
+        $middleware2 = new MiddlewareResponseStub($middlewareResponse);
+        $middleware3 = new MiddlewareStub();
+
+        $serverRequest = $this->getServerRequestMock();
+
+        $serverRequest
+      ->expects($this->exactly(2))
+      ->method('getBody');
+
+        $response = $this->getMockBuilder(ResponseInterface::class)
+      ->getMock();
+
+        $stack = new Stack($response, $middleware1, $middleware2, $middleware3);
+        $enchencedStack = $stack->withMiddleware(new MiddlewareStub());
+        $stackResponse = $enchencedStack->process($serverRequest);
+        $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
+        $this->assertFalse($stackResponse===$response);
     }
 
     private function getServerRequestMock()
@@ -103,5 +131,21 @@ class MiddlewareStub implements ServerMiddlewareInterface
         $body = $request->getBody();
 
         return $frame->next($request);
+    }
+}
+
+
+class MiddlewareResponseStub implements ServerMiddlewareInterface
+{
+    public function __construct(ResponseInterface $response)
+    {
+        $this->response = $response;
+    }
+
+    public function process(ServerRequestInterface $request, DelegateInterface $frame) : ResponseInterface
+    {
+        $body = $request->getBody();
+
+        return $this->response;
     }
 }
