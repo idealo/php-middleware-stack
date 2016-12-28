@@ -47,10 +47,12 @@ class Stack implements StackInterface
     {
         $middleware = $this->middlewares[0] ?? false;
 
-        return $middleware->process(
+        return $middleware
+        ? $middleware->process(
           $request,
           $this->obtainDelegateFrame($middleware)
-          );
+          )
+        : $this->defaultResponse;
     }
 
     public function obtainDelegateFrame(ServerMiddlewareInterface $middleware) : DelegateInterface

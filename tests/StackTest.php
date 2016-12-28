@@ -86,6 +86,24 @@ class StackTest extends TestCase
         $this->assertFalse($stackResponse===$response);
     }
 
+
+    public function testServerEmptyMiddleware()
+    {
+        $serverRequest = $this->getServerRequestMock();
+
+        $serverRequest
+      ->expects($this->exactly(0))
+      ->method('getBody');
+
+        $response = $this->getMockBuilder(ResponseInterface::class)
+      ->getMock();
+
+        $stack = new Stack($response);
+        $stackResponse = $stack->process($serverRequest);
+        $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
+        $this->assertTrue($stackResponse===$response);
+    }
+
     private function getServerRequestMock()
     {
         return $this->getMockBuilder(ServerRequestInterface::class)
