@@ -1,15 +1,20 @@
 <phpunit
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
-         backupGlobals="true"
-         backupStaticAttributes="false"
-         bootstrap="tests/bootstrap.php"
-         cacheTokens="false"
-         colors="true"
-         verbose="true">
-  <testsuites>
-   <testsuite name="Middleware Stack Test Coverage">
-     <directory>tests</directory>
-   </testsuite>
- </testsuites>
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
+        backupGlobals="true"
+        backupStaticAttributes="false"
+        bootstrap="tests/bootstrap.php"
+        cacheTokens="false"
+        colors="true"
+        verbose="true">
+    <testsuites>
+        <testsuite name="Middleware Stack Test Coverage">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
