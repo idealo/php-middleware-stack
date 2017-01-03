@@ -51,9 +51,9 @@ class TrickyMiddleware implements ServerMiddlewareInterface
     public function process(ServerRequestInterface $request, DelegateInterface $frame) : ResponseInterface
     {
         $requestBody = $request->getBody();
-        try{
+        try {
             // implement your middleware logic here  
-        }catch(\Exception $exception){
+        } catch (\Exception $exception){
             return new CustomExceptionResponse($exception);
         }
     
