@@ -5,6 +5,14 @@ This is an implementation of [PSR-15 Draft](https://github.com/php-fig/fig-stand
 
 It enables a sequential execution of middlewares that use a PSR-7 conform Response/Request implementation.
 
+## Install
+
+```bash 
+
+$ composer require idealo/php-middleware-stack
+
+```
+
 ## How to
 ```php
 
