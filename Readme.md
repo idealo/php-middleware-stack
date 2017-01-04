@@ -76,7 +76,7 @@ $defaultResponse = new DefaultResponse();
 
 // you put your request into a PSR7 conform way
 $request = new ServerRequest();
-``
+
 // and here we are
 $stack = new \Idealo\Middleware\Stack(
     $defaultResponse,
