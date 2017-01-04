@@ -6,6 +6,10 @@
         {
             "name": "Vsevolod Dolgopolov",
             "email": "vsevolod.dolgopolov@idealo.de"
+        },
+        {
+            "name": "Dirk Adler",
+            "email": "dirk.adler@idealo.de"
         }
     ],
     "require": {
