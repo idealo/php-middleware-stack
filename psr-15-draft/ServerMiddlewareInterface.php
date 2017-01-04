@@ -14,7 +14,7 @@ interface ServerMiddlewareInterface extends MiddlewareInterface
      * to the next frame to get a response.
      *
      * @param ServerRequestInterface $request
-     * @param DelegateInterface      $frame
+     * @param DelegateInterface $frame
      *
      * @return ResponseInterface
      */
