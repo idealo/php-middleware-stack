@@ -2,17 +2,14 @@
 
 namespace Idealo\Middleware;
 
-use Psr\Http\Message\RequestInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Middleware\DelegateInterface;
-use Psr\Http\Middleware\MiddlewareInterface;
-use Psr\Http\Middleware\ServerMiddlewareInterface;
-use Psr\Http\Middleware\StackInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Stack implements StackInterface
 {
     /**
-     * @var ServerMiddlewareInterface[]
+     * @var MiddlewareInterface[]
      */
     protected $middlewares = [];
 
@@ -21,7 +18,7 @@ class Stack implements StackInterface
      */
     protected $defaultResponse;
 
-    public function __construct(ResponseInterface $response, ServerMiddlewareInterface ...$middlewares)
+    public function __construct(ResponseInterface $response, MiddlewareInterface ...$middlewares)
     {
         $this->defaultResponse = $response;
         $this->middlewares = $middlewares;
@@ -51,38 +48,15 @@ class Stack implements StackInterface
         );
     }
 
-    public function process(RequestInterface $request): ResponseInterface
+    public function process(ServerRequestInterface $request): ResponseInterface
     {
         $middleware = $this->middlewares[0] ?? false;
 
         return $middleware
             ? $middleware->process(
                 $request,
-                $this->obtainDelegateFrame($middleware)
+                $this->withoutMiddleware($middleware)
             )
             : $this->defaultResponse;
-    }
-
-    protected function obtainDelegateFrame(ServerMiddlewareInterface $middleware): DelegateInterface
-    {
-        $stackFrame = $this->withoutMiddleware($middleware);
-
-        return new class ($stackFrame) implements DelegateInterface
-        {
-            /**
-             * @var StackInterface
-             */
-            private $stackFrame;
-
-            public function __construct(StackInterface $stackFrame)
-            {
-                $this->stackFrame = $stackFrame;
-            }
-
-            public function next(RequestInterface $request): ResponseInterface
-            {
-                return $this->stackFrame->process($request);
-            }
-        };
     }
 }
