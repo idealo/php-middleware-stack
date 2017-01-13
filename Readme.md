@@ -40,7 +40,9 @@ $stackResponse = $stack->process($request);
 To perform a sequential processing of injected middlewares you have to call stack's ```process``` method with:
 * an instance of ```Psr\Http\Message\RequestInterface```.
 
-By default stack's ``process``` method returns the injected response object. If any middleware decides to answer on it's own, than the response object of this certain middleware is returned.
+By default stack's ```process``` method returns the injected response object. If any middleware decides to answer on it's own, than the response object of this certain middleware is returned.
+
+Stack implements ```Interop\Http\ServerMiddleware\DelegateInterface```.
 
 ## For example
 
