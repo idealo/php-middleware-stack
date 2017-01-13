@@ -17,7 +17,7 @@ class StackTest extends TestCase
     {
         $response = $this->getResponseMock();
 
-        $this->assertInstanceOf(StackInterface::class, new Stack($response));
+        $this->assertInstanceOf(DelegateInterface::class, new Stack($response));
     }
 
     public function testServerMiddlewareStack()
@@ -38,50 +38,6 @@ class StackTest extends TestCase
 
         $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
         $this->assertTrue($stackResponse === $response);
-    }
-
-    public function testServerMiddlewareWithMiddlewareStack()
-    {
-        $middleware1 = new MiddlewareStub();
-        $middleware2 = new MiddlewareStub();
-        $middleware3 = new MiddlewareStub();
-
-        $serverRequest = $this->getServerRequestMock();
-        $serverRequest
-            ->expects($this->exactly(4))
-            ->method('getBody');
-
-        $response = $this->getResponseMock();
-
-        $stack = new Stack($response, $middleware1, $middleware2, $middleware3);
-        $enhancedStack = $stack->withMiddleware(new MiddlewareStub());
-        $stackResponse = $enhancedStack->process($serverRequest);
-
-        $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
-        $this->assertTrue($stackResponse === $response);
-    }
-
-    public function testServerMiddlewareWithMiddlewareResponse()
-    {
-        $middlewareResponse = $this->getResponseMock();
-
-        $middleware1 = new MiddlewareStub();
-        $middleware2 = new MiddlewareResponseStub($middlewareResponse);
-        $middleware3 = new MiddlewareStub();
-
-        $serverRequest = $this->getServerRequestMock();
-        $serverRequest
-            ->expects($this->exactly(2))
-            ->method('getBody');
-
-        $response = $this->getResponseMock();
-
-        $stack = new Stack($response, $middleware1, $middleware2, $middleware3);
-        $enhancedStack = $stack->withMiddleware(new MiddlewareStub());
-        $stackResponse = $enhancedStack->process($serverRequest);
-
-        $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
-        $this->assertFalse($stackResponse === $response);
     }
 
     public function testServerEmptyMiddleware()

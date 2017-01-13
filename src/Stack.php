@@ -2,11 +2,12 @@
 
 namespace Idealo\Middleware;
 
+use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class Stack implements StackInterface
+class Stack implements DelegateInterface
 {
     /**
      * @var MiddlewareInterface[]
@@ -24,18 +25,7 @@ class Stack implements StackInterface
         $this->middlewares = $middlewares;
     }
 
-    public function withMiddleware(MiddlewareInterface $middleware): StackInterface
-    {
-        return new self(
-            $this->defaultResponse,
-            ...array_merge(
-                $this->middlewares,
-                [$middleware]
-            )
-        );
-    }
-
-    public function withoutMiddleware(MiddlewareInterface $middleware): StackInterface
+    private function withoutMiddleware(MiddlewareInterface $middleware): DelegateInterface
     {
         return new self(
             $this->defaultResponse,
