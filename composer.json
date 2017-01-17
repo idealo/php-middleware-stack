@@ -1,28 +1,38 @@
 {
-    "name": "idealo/php-middleware-stack",
-    "description": "Implementation of HTTP Middleware PSR-15 specification",
-    "license": "Apache License 2.0",
-    "authors": [
-        {
-            "name": "Vsevolod Dolgopolov",
-            "email": "vsevolod.dolgopolov@idealo.de"
-        },
-        {
-            "name": "Dirk Adler",
-            "email": "dirk.adler@idealo.de"
-        }
-    ],
-    "require": {
-        "php": "^7.0",
-        "psr/http-message": "^1.0"
+  "name": "idealo/php-middleware-stack",
+  "description": "Implementation of HTTP Middleware PSR-15 specification",
+  "keywords": [
+    "stack",
+    "psr",
+    "psr-7",
+    "psr-15",
+    "http",
+    "middleware",
+    "request",
+    "response"
+  ],
+  "license": "Apache License 2.0",
+  "authors": [
+    {
+      "name": "Vsevolod Dolgopolov",
+      "email": "vsevolod.dolgopolov@idealo.de"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^5.6"
-    },
-    "autoload": {
-      "psr-4": {
-        "Psr\\Http\\Middleware\\": "psr-15-draft/",
-        "Idealo\\Middleware\\": "src/"
-      }
+    {
+      "name": "Dirk Adler",
+      "email": "dirk.adler@idealo.de"
     }
+  ],
+  "require": {
+    "php": "^7.0",
+    "psr/http-message": "^1.0",
+    "http-interop/http-middleware": "^0.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Idealo\\Middleware\\": "src/"
+    }
+  }
 }

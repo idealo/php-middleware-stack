@@ -1,7 +1,7 @@
 # PHP Middleware Stack
 [![Build Status](https://travis-ci.com/idealo/php-middleware-stack.svg?token=dB3owzyXmEKz9x3RX1AW&branch=master)](https://travis-ci.com/idealo/php-middleware-stack)
 
-This is an implementation of [PSR-15 Draft](https://github.com/php-fig/fig-standards/blob/master/proposed/http-middleware/middleware.md) for PHP7+ runtime environment.
+This is an implementation of [PSR-15 Draft](https://github.com/php-fig/fig-standards/blob/master/proposed/http-middleware/middleware.md) using the proposed Interface package [http-interop/http-middleware](https://github.com/http-interop/http-middleware) for PHP7+ runtime environment.
 
 It enables a sequential execution of middlewares that use a PSR-7 conform Response/Request implementation.
 
@@ -40,7 +40,9 @@ $stackResponse = $stack->process($request);
 To perform a sequential processing of injected middlewares you have to call stack's ```process``` method with:
 * an instance of ```Psr\Http\Message\RequestInterface```.
 
-By default stack's ``process``` method returns the injected response object. If any middleware decides to answer on it's own, than the response object of this certain middleware is returned.
+By default stack's ```process``` method returns the injected response object. If any middleware decides to answer on it's own, than the response object of this certain middleware is returned.
+
+Stack implements ```Interop\Http\ServerMiddleware\DelegateInterface```.
 
 ## For example
 
@@ -51,10 +53,10 @@ By default stack's ``process``` method returns the injected response object. If 
 // you decide what middleware you want to put in a stack.
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Middleware\DelegateInterface;
-use Psr\Http\Middleware\ServerMiddlewareInterface;
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
 
-class TrickyMiddleware implements ServerMiddlewareInterface
+class TrickyMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, DelegateInterface $frame) : ResponseInterface
     {
@@ -65,16 +67,16 @@ class TrickyMiddleware implements ServerMiddlewareInterface
             return new CustomExceptionResponse($exception);
         }
     
-        return $frame->next($request);
+        return $frame->process($request);
     }
 }
 
-class VeryTrickyMiddleware implements ServerMiddlewareInterface
+class VeryTrickyMiddleware implements MiddlewareInterface
 {
     ...
 }
 
-class LessTrickyMiddleware implements ServerMiddlewareInterface
+class LessTrickyMiddleware implements MiddlewareInterface
 {
     ...
 }
