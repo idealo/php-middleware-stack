@@ -2,12 +2,12 @@
 
 namespace Idealo\Middleware;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class Stack implements DelegateInterface
+class Stack implements RequestHandlerInterface
 {
     /**
      * @var MiddlewareInterface[]
@@ -25,7 +25,7 @@ class Stack implements DelegateInterface
         $this->middlewares = $middlewares;
     }
 
-    private function withoutMiddleware(MiddlewareInterface $middleware): DelegateInterface
+    private function withoutMiddleware(MiddlewareInterface $middleware): RequestHandlerInterface
     {
         return new self(
             $this->defaultResponse,
@@ -38,7 +38,7 @@ class Stack implements DelegateInterface
         );
     }
 
-    public function process(ServerRequestInterface $request): ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $middleware = $this->middlewares[0] ?? false;
 

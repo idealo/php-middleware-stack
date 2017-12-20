@@ -1,7 +1,7 @@
 # PHP Middleware Stack
 [![Build Status](https://travis-ci.com/idealo/php-middleware-stack.svg?token=dB3owzyXmEKz9x3RX1AW&branch=master)](https://travis-ci.com/idealo/php-middleware-stack)
 
-This is an implementation of [PSR-15 Draft](https://github.com/php-fig/fig-standards/blob/master/proposed/http-middleware/middleware.md) using the proposed Interface package [http-interop/http-middleware](https://github.com/http-interop/http-middleware) for PHP7+ runtime environment.
+This is an implementation of [PSR-15 Draft](https://github.com/php-fig/fig-standards/blob/master/proposed/http-handlers/request-handlers.md) using the proposed Interface packages [http-interop/http-server-middleware](https://github.com/http-interop/http-server-middleware) and [http-interop/http-server-handler](https://github.com/http-interop/http-server-handler) for PHP7+ runtime environment.
 
 It enables a sequential execution of middlewares that use a PSR-7 conform Response/Request implementation.
 
@@ -27,7 +27,7 @@ $stack = new Stack(
     $middleware3
 );
 
-$stackResponse = $stack->process($request);
+$stackResponse = $stack->handle($request);
 
 
 ```
@@ -35,14 +35,14 @@ $stackResponse = $stack->process($request);
 ## Usage
 **idealo/php-middleware-stack** provides the ```Idealo\Middleware\Stack``` class. All it has to know in order to be instantiable is:
 * an instance of ```Psr\Http\Message\ResponseInterface``` as the default response
-* and middlewares, that implement the ```Psr\Http\Middleware\ServerMiddlewareInterface```
+* and middlewares, that implement the ```Interop\Http\Server\MiddlewareInterface```
 
-To perform a sequential processing of injected middlewares you have to call stack's ```process``` method with:
-* an instance of ```Psr\Http\Message\RequestInterface```.
+To perform a sequential processing of injected middlewares you have to call stack's ```handle``` method with:
+* an instance of ```Psr\Http\Message\ServerRequestInterface```.
 
-By default stack's ```process``` method returns the injected response object. If any middleware decides to answer on it's own, than the response object of this certain middleware is returned.
+By default stack's ```handle``` method returns the injected response object. If any middleware decides to answer on it's own, than the response object of this certain middleware is returned.
 
-Stack implements ```Interop\Http\ServerMiddleware\DelegateInterface```.
+Stack implements ```Interop\Http\Server\RequestHandlerInterface```.
 
 ## For example
 
@@ -53,12 +53,12 @@ Stack implements ```Interop\Http\ServerMiddleware\DelegateInterface```.
 // you decide what middleware you want to put in a stack.
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface;
 
 class TrickyMiddleware implements MiddlewareInterface
 {
-    public function process(ServerRequestInterface $request, DelegateInterface $frame) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $frame) : ResponseInterface
     {
         $requestBody = $request->getBody();
         try {
@@ -67,7 +67,7 @@ class TrickyMiddleware implements MiddlewareInterface
             return new CustomExceptionResponse($exception);
         }
     
-        return $frame->process($request);
+        return $frame->handle($request);
     }
 }
 
@@ -95,7 +95,7 @@ $stack = new \Idealo\Middleware\Stack(
     new LessTrickyMiddleware()
 );
 
-$stackResponse = $stack->process($request);
+$stackResponse = $stack->handle($request);
 
 // if everything goes well then
 var_dump($stackResponse === $defaultResponse); // gives: true
