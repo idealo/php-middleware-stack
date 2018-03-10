@@ -1,7 +1,7 @@
 # PHP Middleware Stack
 [![Build Status](https://travis-ci.com/idealo/php-middleware-stack.svg?token=dB3owzyXmEKz9x3RX1AW&branch=master)](https://travis-ci.com/idealo/php-middleware-stack)
 
-This is an implementation of [PSR-15 Draft](https://github.com/php-fig/fig-standards/blob/master/proposed/http-handlers/request-handlers.md) using the proposed Interface packages [http-interop/http-server-middleware](https://github.com/http-interop/http-server-middleware) and [http-interop/http-server-handler](https://github.com/http-interop/http-server-handler) for PHP7+ runtime environment.
+This is an implementation of [PSR-15](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md) using the proposed Interface packages [psr/http-server-middleware](https://github.com/php-fig/http-server-middleware) and [psr/http-server-handler](https://github.com/php-fig/http-server-handler) for PHP7+ runtime environment.
 
 It enables a sequential execution of middlewares that use a PSR-7 conform Response/Request implementation.
 
@@ -35,14 +35,14 @@ $stackResponse = $stack->handle($request);
 ## Usage
 **idealo/php-middleware-stack** provides the ```Idealo\Middleware\Stack``` class. All it has to know in order to be instantiable is:
 * an instance of ```Psr\Http\Message\ResponseInterface``` as the default response
-* and middlewares, that implement the ```Interop\Http\Server\MiddlewareInterface```
+* and middlewares, that implement the ```Psr\Http\Server\MiddlewareInterface```
 
 To perform a sequential processing of injected middlewares you have to call stack's ```handle``` method with:
 * an instance of ```Psr\Http\Message\ServerRequestInterface```.
 
 By default stack's ```handle``` method returns the injected response object. If any middleware decides to answer on it's own, than the response object of this certain middleware is returned.
 
-Stack implements ```Interop\Http\Server\RequestHandlerInterface```.
+Stack implements ```Psr\Http\Server\RequestHandlerInterface```.
 
 ## For example
 
@@ -53,8 +53,8 @@ Stack implements ```Interop\Http\Server\RequestHandlerInterface```.
 // you decide what middleware you want to put in a stack.
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 class TrickyMiddleware implements MiddlewareInterface
 {

@@ -1,11 +1,12 @@
 <?php
 
 use Idealo\Middleware\Stack;
-use Interop\Http\Server\MiddlewareInterface;
-use Interop\Http\Server\RequestHandlerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * @covers \Idealo\Middleware\Stack
@@ -55,7 +56,7 @@ class StackTest extends TestCase
         $this->assertTrue($stackResponse === $response);
     }
 
-    public function testServerMiddlewarehandleingOrder()
+    public function testServerMiddlewareHandlingOrder()
     {
         $callCounter = 0;
 
@@ -99,7 +100,7 @@ class StackTest extends TestCase
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ResponseInterface
+     * @return MockObject|ResponseInterface
      */
     private function getResponseMock()
     {
@@ -108,7 +109,7 @@ class StackTest extends TestCase
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|MiddlewareInterface
+     * @return MockObject|MiddlewareInterface
      */
     private function getMiddlewareMock()
     {
@@ -120,7 +121,7 @@ class StackTest extends TestCase
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ServerRequestInterface
+     * @return MockObject|ServerRequestInterface
      */
     private function getServerRequestMock()
     {
