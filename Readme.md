@@ -58,7 +58,7 @@ use Psr\Http\Server\MiddlewareInterface;
 
 class TrickyMiddleware implements MiddlewareInterface
 {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $frame) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
         $requestBody = $request->getBody();
         try {
@@ -67,7 +67,7 @@ class TrickyMiddleware implements MiddlewareInterface
             return new CustomExceptionResponse($exception);
         }
     
-        return $frame->handle($request);
+        return $handler->handle($request);
     }
 }
 
