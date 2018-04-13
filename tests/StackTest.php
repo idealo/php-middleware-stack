@@ -1,5 +1,7 @@
 <?php
 
+namespace Idealo\Middleware\Tests;
+
 use Idealo\Middleware\Stack;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -63,19 +65,19 @@ class StackTest extends TestCase
         $middleware1 = $this->getMiddlewareMock();
         $middleware1->expects($this->once())
             ->method('process')
-            ->willReturnCallback(function (ServerRequestInterface $request, RequestHandlerInterface $frame) use (
+            ->willReturnCallback(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use (
                 &
                 $callCounter
             ) {
                 $this->assertEquals(0, $callCounter++);
-                return $frame->handle($request);
+                return $handler->handle($request);
             });
 
         $interruptingResponse = $this->getResponseMock();
         $middleware2 = $this->getMiddlewareMock();
         $middleware2->expects($this->once())
             ->method('process')
-            ->willReturnCallback(function (ServerRequestInterface $request, RequestHandlerInterface $frame) use (
+            ->willReturnCallback(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use (
                 $interruptingResponse,
                 &$callCounter
             ) {
@@ -158,35 +160,5 @@ class StackTest extends TestCase
                 'getBody',
                 'withBody',
             ])->getMock();
-    }
-}
-
-class MiddlewareStub implements MiddlewareInterface
-{
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $frame): ResponseInterface
-    {
-        $body = $request->getBody();
-
-        return $frame->handle($request);
-    }
-}
-
-class MiddlewareResponseStub implements MiddlewareInterface
-{
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
-
-    public function __construct(ResponseInterface $response)
-    {
-        $this->response = $response;
-    }
-
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $frame): ResponseInterface
-    {
-        $body = $request->getBody();
-
-        return $this->response;
     }
 }

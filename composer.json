@@ -35,5 +35,10 @@
     "psr-4": {
       "Idealo\\Middleware\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Idealo\\Middleware\\Tests\\": "tests/"
+    }
   }
 }
