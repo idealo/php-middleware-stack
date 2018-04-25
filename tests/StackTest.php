@@ -1,12 +1,14 @@
 <?php
 
+namespace Idealo\Middleware\Tests;
+
 use Idealo\Middleware\Stack;
-use Idealo\Middleware\StackInterface;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * @covers \Idealo\Middleware\Stack
@@ -17,7 +19,7 @@ class StackTest extends TestCase
     {
         $response = $this->getResponseMock();
 
-        $this->assertInstanceOf(DelegateInterface::class, new Stack($response));
+        $this->assertInstanceOf(RequestHandlerInterface::class, new Stack($response));
     }
 
     public function testServerMiddlewareStack()
@@ -34,7 +36,7 @@ class StackTest extends TestCase
         $response = $this->getResponseMock();
 
         $stack = new Stack($response, $middleware1, $middleware2, $middleware3);
-        $stackResponse = $stack->process($serverRequest);
+        $stackResponse = $stack->handle($serverRequest);
 
         $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
         $this->assertTrue($stackResponse === $response);
@@ -50,30 +52,32 @@ class StackTest extends TestCase
         $response = $this->getResponseMock();
 
         $stack = new Stack($response);
-        $stackResponse = $stack->process($serverRequest);
+        $stackResponse = $stack->handle($serverRequest);
 
         $this->assertInstanceOf(ResponseInterface::class, $stackResponse);
         $this->assertTrue($stackResponse === $response);
     }
 
-    public function testServerMiddlewareProcessingOrder()
+    public function testServerMiddlewareHandlingOrder()
     {
         $callCounter = 0;
 
         $middleware1 = $this->getMiddlewareMock();
         $middleware1->expects($this->once())
             ->method('process')
-            ->willReturnCallback(function (ServerRequestInterface $request, DelegateInterface $frame) use (&$callCounter
+            ->willReturnCallback(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use (
+                &
+                $callCounter
             ) {
                 $this->assertEquals(0, $callCounter++);
-                return $frame->process($request);
+                return $handler->handle($request);
             });
 
         $interruptingResponse = $this->getResponseMock();
         $middleware2 = $this->getMiddlewareMock();
         $middleware2->expects($this->once())
             ->method('process')
-            ->willReturnCallback(function (ServerRequestInterface $request, DelegateInterface $frame) use (
+            ->willReturnCallback(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use (
                 $interruptingResponse,
                 &$callCounter
             ) {
@@ -92,13 +96,13 @@ class StackTest extends TestCase
             $middleware3
         );
 
-        $stack->process($this->getServerRequestMock());
+        $stack->handle($this->getServerRequestMock());
 
         $this->assertEquals(2, $callCounter);
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ResponseInterface
+     * @return MockObject|ResponseInterface
      */
     private function getResponseMock()
     {
@@ -107,7 +111,7 @@ class StackTest extends TestCase
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|MiddlewareInterface
+     * @return MockObject|MiddlewareInterface
      */
     private function getMiddlewareMock()
     {
@@ -119,7 +123,7 @@ class StackTest extends TestCase
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ServerRequestInterface
+     * @return MockObject|ServerRequestInterface
      */
     private function getServerRequestMock()
     {
@@ -156,35 +160,5 @@ class StackTest extends TestCase
                 'getBody',
                 'withBody',
             ])->getMock();
-    }
-}
-
-class MiddlewareStub implements MiddlewareInterface
-{
-    public function process(ServerRequestInterface $request, DelegateInterface $frame): ResponseInterface
-    {
-        $body = $request->getBody();
-
-        return $frame->process($request);
-    }
-}
-
-class MiddlewareResponseStub implements MiddlewareInterface
-{
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
-
-    public function __construct(ResponseInterface $response)
-    {
-        $this->response = $response;
-    }
-
-    public function process(ServerRequestInterface $request, DelegateInterface $frame): ResponseInterface
-    {
-        $body = $request->getBody();
-
-        return $this->response;
     }
 }
