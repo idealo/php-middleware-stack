@@ -19,3 +19,4 @@ plugins:
     enabled: true
 exclude_patterns:
 - tests/
+- .phan/
