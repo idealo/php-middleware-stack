@@ -1,5 +1,7 @@
 # PHP Middleware Stack
 [![Build Status](https://travis-ci.org/idealo/php-middleware-stack.svg?branch=master)](https://travis-ci.org/idealo/php-middleware-stack)
+[![Maintainability](https://api.codeclimate.com/v1/badges/254d91c39447f58c7d44/maintainability)](https://codeclimate.com/github/idealo/php-middleware-stack/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/254d91c39447f58c7d44/test_coverage)](https://codeclimate.com/github/idealo/php-middleware-stack/test_coverage)
 
 This is an implementation of [PSR-15](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md) using the proposed Interface packages [psr/http-server-middleware](https://github.com/php-fig/http-server-middleware) and [psr/http-server-handler](https://github.com/php-fig/http-server-handler) for PHP7+ runtime environment.
 
