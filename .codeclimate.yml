@@ -15,6 +15,7 @@ plugins:
     enabled: true
     config:
       file_extensions: "php"
+      ignore-undeclared: true
   sonar-php:
     enabled: true
 exclude_patterns:
