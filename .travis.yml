@@ -3,11 +3,9 @@ env:
     - CC_TEST_REPORTER_ID=4796fc8abec9f60231051df2c2523b62c6f650137be5458aada65a7bbc79e6aa
 language: php
 php:
-  - '7.0'
-  - '7.1'
   - '7.2'
   - '7.3'
-  - '7.4-snapshot'
+  - '7.4snapshot'
   - 'nightly'
 matrix:
   allow_failures:
