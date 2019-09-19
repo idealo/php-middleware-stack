@@ -116,7 +116,7 @@ class StackTest extends TestCase
     private function getMiddlewareMock()
     {
         return $this->getMockBuilder(MiddlewareInterface::class)
-            ->setMethods([
+            ->onlyMethods([
                 'process',
             ])
             ->getMock();
@@ -128,7 +128,7 @@ class StackTest extends TestCase
     private function getServerRequestMock()
     {
         return $this->getMockBuilder(ServerRequestInterface::class)
-            ->setMethods([
+            ->onlyMethods([
                 'getServerParams',
                 'getCookieParams',
                 'withCookieParams',
