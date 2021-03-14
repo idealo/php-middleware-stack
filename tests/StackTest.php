@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Idealo\Middleware\Tests;
 
 use Idealo\Middleware\Stack;

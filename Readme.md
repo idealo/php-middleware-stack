@@ -10,16 +10,13 @@ It enables a sequential execution of middlewares that use a PSR-7 conform Respon
 ## Install
 
 ```bash 
-
-$ composer require idealo/php-middleware-stack
-
+composer require idealo/php-middleware-stack
 ```
+
+Note: use Version ^1.0 for PHP < 7.3
 
 ## How to
 ```php
-
-<?php
-
 use Idealo\Middleware\Stack;
 
 $stack = new Stack(
@@ -30,8 +27,6 @@ $stack = new Stack(
 );
 
 $stackResponse = $stack->handle($request);
-
-
 ```
 
 ## Usage
@@ -49,9 +44,6 @@ Stack implements ```Psr\Http\Server\RequestHandlerInterface```.
 ## For example
 
 ```php
-
-<?php
-
 // you decide what middleware you want to put in a stack.
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -101,5 +93,4 @@ $stackResponse = $stack->handle($request);
 
 // if everything goes well then
 var_dump($stackResponse === $defaultResponse); // gives: true
-
 ```
