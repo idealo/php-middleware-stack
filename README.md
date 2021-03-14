@@ -1,5 +1,5 @@
 # PHP Middleware Stack
-[![Build Status](https://travis-ci.org/idealo/php-middleware-stack.svg?branch=master)](https://travis-ci.org/idealo/php-middleware-stack)
+[![Build Status](https://github.com/idealo/php-middleware-stack/workflows/CI/badge.svg)](https://github.com/idealo/php-middleware-stack/actions?query=workflow%3Aci)
 [![Maintainability](https://api.codeclimate.com/v1/badges/254d91c39447f58c7d44/maintainability)](https://codeclimate.com/github/idealo/php-middleware-stack/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/254d91c39447f58c7d44/test_coverage)](https://codeclimate.com/github/idealo/php-middleware-stack/test_coverage)
 [![Packagist](https://img.shields.io/packagist/v/idealo/php-middleware-stack)](https://packagist.org/packages/idealo/php-middleware-stack)
