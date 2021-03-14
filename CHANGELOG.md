@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [2.0.1] - 2021-03-14
+
+### Fixed
+
+- Links in changelog
+
 ## [2.0.0] - 2021-03-14
 
 ### Added
@@ -32,8 +38,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 First draft of middleware stack implementing PSR-15 Draft for PHP7+ runtime environment.
 
-[Unreleased]: https://github.com/idealo/php-rdkafka-ffi/compare/v2.0.0...HEAD
-[2.0.0]: https://github.com/idealo/php-rdkafka-ffi/compare/v1.0.0...v2.0.0
-[1.0.0]: https://github.com/idealo/php-rdkafka-ffi/compare/v0.2.0...v1.0.0
-[0.2.0]: https://github.com/idealo/php-rdkafka-ffi/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/idealo/php-rdkafka-ffi/releases/tag/v0.1.0
+[Unreleased]: https://github.com/idealo/php-middleware-stack/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/idealo/php-middleware-stack/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/idealo/php-middleware-stack/compare/v1.0.0...v2.0.0
+[1.0.0]: https://github.com/idealo/php-middleware-stack/compare/v0.2.0...v1.0.0
+[0.2.0]: https://github.com/idealo/php-middleware-stack/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/idealo/php-middleware-stack/releases/tag/v0.1.0
