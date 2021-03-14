@@ -53,7 +53,7 @@ jobs:
         run: vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml
 
       - name: Publish code coverage to codeclimate
-        if: matrix.os-version == '8.0 && github.event_name == 'push'
+        if: matrix.os-version == '8.0' && github.event_name == 'push'
         uses: paambaati/codeclimate-action@v2.7.5
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
