@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [3.0.0] - 2024-10-21
+
 ### Added
 
 - Add support for PHP 8.4
@@ -12,7 +14,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - Drop support for PHP < 8.1
-- Rename Stack constructor parameter `$defaultResponse` to `$response`
+- Rename Stack constructor parameter `$response` to `$defaultResponse`
 
 ## [2.0.1] - 2021-03-14
 
@@ -47,7 +49,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 First draft of middleware stack implementing PSR-15 Draft for PHP7+ runtime environment.
 
-[Unreleased]: https://github.com/idealo/php-middleware-stack/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/idealo/php-middleware-stack/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/idealo/php-middleware-stack/compare/v2.0.1...v3.0.0
 [2.0.1]: https://github.com/idealo/php-middleware-stack/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/idealo/php-middleware-stack/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/idealo/php-middleware-stack/compare/v0.2.0...v1.0.0
