@@ -5,6 +5,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+
+- Add support for PHP 8.4
+
+### Changed
+
+- Drop support for PHP < 8.1
+
 ## [2.0.1] - 2021-03-14
 
 ### Fixed

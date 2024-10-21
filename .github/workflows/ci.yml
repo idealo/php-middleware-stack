@@ -16,11 +16,10 @@ jobs:
         os:
           - ubuntu-latest
         php:
-          - "7.4"
-          - "8.0"
           - "8.1"
           - "8.2"
           - "8.3"
+          - "8.4"
 
     steps:
       - name: Checkout
@@ -38,7 +37,7 @@ jobs:
           echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache composer cache directory
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}

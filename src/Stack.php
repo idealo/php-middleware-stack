@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace Idealo\Middleware;
 
-use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class Stack implements RequestHandlerInterface
 {
     /**
      * @var MiddlewareInterface[]
      */
-    protected $middlewares = [];
+    protected array $middlewares = [];
 
-    /**
-     * @var ResponseInterface
-     */
-    protected $defaultResponse;
+    protected ResponseInterface $defaultResponse;
 
     public function __construct(ResponseInterface $response, MiddlewareInterface ...$middlewares)
     {

@@ -106,7 +106,7 @@ class StackTest extends TestCase
     /**
      * @return MockObject|ResponseInterface
      */
-    private function getResponseMock()
+    private function getResponseMock(): MockObject|ResponseInterface
     {
         return $this->getMockBuilder(ResponseInterface::class)
             ->getMock();
@@ -115,7 +115,7 @@ class StackTest extends TestCase
     /**
      * @return MockObject|MiddlewareInterface
      */
-    private function getMiddlewareMock()
+    private function getMiddlewareMock(): MiddlewareInterface|MockObject
     {
         return $this->getMockBuilder(MiddlewareInterface::class)
             ->onlyMethods([
@@ -127,7 +127,7 @@ class StackTest extends TestCase
     /**
      * @return MockObject|ServerRequestInterface
      */
-    private function getServerRequestMock()
+    private function getServerRequestMock(): MockObject|ServerRequestInterface
     {
         return $this->getMockBuilder(ServerRequestInterface::class)
             ->onlyMethods([

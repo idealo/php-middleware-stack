@@ -1,10 +1,12 @@
 # PHP Middleware Stack
+
 [![Build Status](https://github.com/idealo/php-middleware-stack/workflows/CI/badge.svg)](https://github.com/idealo/php-middleware-stack/actions?query=workflow%3Aci)
 [![Maintainability](https://api.codeclimate.com/v1/badges/254d91c39447f58c7d44/maintainability)](https://codeclimate.com/github/idealo/php-middleware-stack/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/254d91c39447f58c7d44/test_coverage)](https://codeclimate.com/github/idealo/php-middleware-stack/test_coverage)
 [![Packagist](https://img.shields.io/packagist/v/idealo/php-middleware-stack)](https://packagist.org/packages/idealo/php-middleware-stack)
 
-This is an implementation of [PSR-15](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md) using the proposed Interface packages [psr/http-server-middleware](https://github.com/php-fig/http-server-middleware) and [psr/http-server-handler](https://github.com/php-fig/http-server-handler) for PHP7+ runtime environment.
+This is an implementation of [PSR-15](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md) using the proposed Interface packages [psr/http-server-middleware](https://github.com/php-fig/http-server-middleware)
+and [psr/http-server-handler](https://github.com/php-fig/http-server-handler) for PHP ^8.1 runtime environment.
 
 It enables a sequential execution of middlewares that use a PSR-7 conform Response/Request implementation.
 
@@ -14,9 +16,10 @@ It enables a sequential execution of middlewares that use a PSR-7 conform Respon
 composer require idealo/php-middleware-stack
 ```
 
-Note: use Version ^1.0 for PHP < 7.3
+Note: use Version ^2.0 for PHP < 8.1
 
 ## How to
+
 ```php
 use Idealo\Middleware\Stack;
 
@@ -31,14 +34,19 @@ $stackResponse = $stack->handle($request);
 ```
 
 ## Usage
-**idealo/php-middleware-stack** provides the ```Idealo\Middleware\Stack``` class. All it has to know in order to be instantiable is:
+
+**idealo/php-middleware-stack** provides the ```Idealo\Middleware\Stack``` class. All it has to know in order to be
+instantiable is:
+
 * an instance of ```Psr\Http\Message\ResponseInterface``` as the default response
 * and middlewares, that implement the ```Psr\Http\Server\MiddlewareInterface```
 
 To perform a sequential processing of injected middlewares you have to call stack's ```handle``` method with:
+
 * an instance of ```Psr\Http\Message\ServerRequestInterface```.
 
-By default stack's ```handle``` method returns the injected response object. If any middleware decides to answer on it's own, than the response object of this certain middleware is returned.
+By default stack's ```handle``` method returns the injected response object. If any middleware decides to answer on it's
+own, than the response object of this certain middleware is returned.
 
 Stack implements ```Psr\Http\Server\RequestHandlerInterface```.
 
