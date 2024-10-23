@@ -16,7 +16,7 @@ class Stack implements RequestHandlerInterface
      */
     protected array $middlewares = [];
 
-    public function __construct(protected $defaultResponse, MiddlewareInterface ...$middlewares)
+    public function __construct(protected ResponseInterface $defaultResponse, MiddlewareInterface ...$middlewares)
     {
         $this->middlewares = $middlewares;
     }
