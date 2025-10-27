@@ -1,8 +1,6 @@
 # PHP Middleware Stack
 
 [![Build Status](https://github.com/idealo/php-middleware-stack/workflows/CI/badge.svg)](https://github.com/idealo/php-middleware-stack/actions?query=workflow%3Aci)
-[![Maintainability](https://api.codeclimate.com/v1/badges/254d91c39447f58c7d44/maintainability)](https://codeclimate.com/github/idealo/php-middleware-stack/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/254d91c39447f58c7d44/test_coverage)](https://codeclimate.com/github/idealo/php-middleware-stack/test_coverage)
 [![Packagist](https://img.shields.io/packagist/v/idealo/php-middleware-stack)](https://packagist.org/packages/idealo/php-middleware-stack)
 
 This is an implementation of [PSR-15](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md) using the proposed Interface packages [psr/http-server-middleware](https://github.com/php-fig/http-server-middleware)

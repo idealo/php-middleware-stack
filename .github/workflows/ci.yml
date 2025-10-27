@@ -50,10 +50,3 @@ jobs:
 
       - name: Run tests with phpunit
         run: vendor/bin/phpunit --coverage-text --coverage-clover=clover.xml
-
-      - name: Publish code coverage to codeclimate
-        if: matrix.php == '8.3' && github.event_name == 'push'
-        uses: paambaati/codeclimate-action@v5
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-
