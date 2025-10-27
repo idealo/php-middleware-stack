@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: php-middleware-stack
+  title: PHP Middleware Stack
+  description: >
+    This is an implementation of PSR-15 using the proposed Interface packages psr/http-server-middleware and 
+    psr/http-server-handler for PHP ^8.1 runtime environment.
+
+    It enables a sequential execution of middlewares that use a PSR-7 conform Response/Request implementation.
+  annotations:
+    github.com/project-slug: idealo/php-middleware-stack
+    github.com/team-slug: idealo/merchant-experience
+    backstage.io/techdocs-ref: "dir:."
+spec:
+  type: library
+  lifecycle: production
+  owner: group:merchant-experience
