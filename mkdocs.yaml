@@ -1,0 +1,13 @@
+site_name: 'INSERT PROJECT NAME HERE'
+site_description: 'INSERT PROJECT DESCRIPTION HERE OR REMOVE THIS LINE'
+edit_uri: blob/main/docs/
+repo_url: 'https://github.com/INSERT GITHUB REPO HERE'
+theme:
+  name: material
+  palette:
+    scheme: default
+  features:
+    - toc.follow
+    - toc.integrate
+plugins:
+  - techdocs-core

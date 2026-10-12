@@ -1,0 +1,170 @@
+#################################################################################################
+##                                                                                             ##
+## This file is managed by https://github.com/idealo/merchant-experience-github-workflow-sync. ##
+## Do not edit it directly, instead use the synchronization workflow to update it!             ##
+##                                                                                             ##
+#################################################################################################
+name: Auto Merge labeled PR
+
+on:
+  pull_request:
+    types: [ labeled ]
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+  statuses: read
+  actions: write
+
+jobs:
+  automerge:
+    if: >-
+      contains(github.event.pull_request.labels.*.name, 'automerge') ||
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    env:
+      GH_TOKEN: ${{ github.token }}
+      OWNER: ${{ github.repository_owner }}
+      REPO: ${{ github.event.repository.name }}
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: dependabot
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+
+      - name: Wait for checks
+        id: wait-checks
+        if: >-
+          contains(github.event.pull_request.labels.*.name, 'automerge') ||
+          contains(fromJSON('["version-update:semver-minor","version-update:semver-patch"]'), steps.dependabot.outputs.update-type)
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          RUN_ID: ${{ github.run_id }}
+          JOB_NAME: ${{ github.job }}
+        with:
+          # language=javascript
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr || pr.state !== 'open' || pr.draft) {
+              core.info(`Skipping: PR is not open or draft. state=${pr.state}, draft=${pr.draft}`);
+              return;
+            }
+            core.setOutput('url', pr.html_url);
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const ref = `${pr.head.sha}`;
+
+            const thisJob = process.env.JOB_NAME;
+
+            const NOTHING_PENDING = new Set(['success', 'neutral', 'skipped']);
+            const INCOMPLETED = new Set(['queued', 'in_progress', 'waiting', 'requested', 'pending']);
+
+            async function sleep(ms) {
+              return new Promise(r => setTimeout(r, ms));
+            }
+
+            function excludeRunsWithSameName(runs) {
+              return (runs || []).filter(r => r.name !== thisJob);
+            }
+
+            async function snapshot() {
+              const checks = await github.rest.checks.listForRef({owner, repo, ref, per_page: 100});
+              const combined = await github.rest.repos.getCombinedStatusForRef({owner, repo, ref});
+
+              let runs = excludeRunsWithSameName(checks.data.check_runs);
+
+              const totalRuns = runs.length;
+              const completedRuns = runs.filter(r => r.status === 'completed');
+              const failingRuns = completedRuns.filter(r => !NOTHING_PENDING.has(r.conclusion || ''));
+              const inProgressRuns = runs.filter(r => r.status && INCOMPLETED.has(r.status));
+
+              const statuses = combined.data.statuses || [];
+              const anyPendingStat = statuses.some(s => (s.state || '').toLowerCase() === 'pending');
+              const anyFailStat = statuses.some(s => ['failure', 'error'].includes((s.state || '').toLowerCase()));
+              const combinedState = (combined.data.state || '').toUpperCase(); // SUCCESS | PENDING | FAILURE
+
+              return {
+                hasRuns: totalRuns > 0,
+                totalRuns,
+                inProgressCount: inProgressRuns.length,
+                failingNames: failingRuns.map(r => r.name),
+                combinedState,
+                anyPendingStat,
+                anyFailStat,
+              };
+            }
+
+            const maxAttempts = 30; // ~30 min
+            const intervalMs = 60_000;
+
+            for (let i = 1; i <= maxAttempts; i++) {
+              const s = await snapshot();
+              core.info(`Try #${i}: total=${s.totalRuns}, in_progress=${s.inProgressCount}, failing=[${s.failingNames.join(', ')}], combined=${s.combinedState}`);
+
+              const greenByChecks = s.hasRuns && s.inProgressCount === 0 && s.failingNames.length === 0;
+              const greenByCombined = (s.combinedState === 'SUCCESS' || s.combinedState === 'PENDING') && !s.anyFailStat && !s.anyPendingStat;
+
+              if ((greenByChecks && greenByCombined) || (!s.hasRuns && greenByCombined)) {
+                core.setOutput('state', 'SUCCESS');
+                core.info('Checks OK.');
+                return;
+              }
+
+              if (s.anyFailStat || s.failingNames.length > 0 || s.combinedState === 'FAILURE') {
+                core.setFailed(`Checks failing: ${s.failingNames.join(', ') || 'combined status FAILURE'}`);
+                return;
+              }
+
+              await sleep(intervalMs);
+            }
+
+            core.setFailed('Waited too long for checks to complete.');
+
+      - name: Merge PR
+        if: steps.wait-checks.outputs.state == 'SUCCESS'
+        run: gh pr merge --squash "${{ steps.wait-checks.outputs.url }}"
+
+      - name: Trigger CI
+        if: steps.wait-checks.outputs.state == 'SUCCESS'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          # language=javascript
+          script: |
+            async function sleep(ms) {
+              return new Promise(r => setTimeout(r, ms));
+            }
+
+            function isActiveWorkflow(fileName) {
+              return workflow => workflow.state === 'active' && workflow.path === `.github/workflows/${fileName}`;
+            }
+
+            try {
+              await sleep(60 * 1000); // wait for PR to be merged: 1 minute
+
+              const workflows = await github.paginate(
+                github.rest.actions.listRepoWorkflows,
+                {...context.repo, per_page: 100}
+              );
+              const workflow = workflows.find(isActiveWorkflow('deploy.yml')) ?? workflows.find(isActiveWorkflow('build.yml'));
+
+              if (!workflow) {
+                core.info('No active deploy.yml or build.yml workflow found. Skipping.');
+              } else {
+                await github.rest.actions.createWorkflowDispatch({
+                  ...context.repo,
+                  workflow_id: workflow.id,
+                  ref: 'main',
+                });
+
+                core.info(`Successfully dispatched ${workflow.path}.`);
+              }
+            } catch (error) {
+              core.setFailed(`Failed to dispatch deploy.yml workflow: ${error.message}`);
+            }

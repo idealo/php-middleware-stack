@@ -1,0 +1,37 @@
+#################################################################################################
+##                                                                                             ##
+## This file is managed by https://github.com/idealo/merchant-experience-github-workflow-sync. ##
+## Do not edit it directly, instead use the synchronization workflow to update it!             ##
+##                                                                                             ##
+#################################################################################################
+
+name: Publish Documentation
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/techdocs.yaml'
+      - "docs/**"
+      - "mkdocs.yaml"
+      - "catalog-info.yaml"
+      - "README.md"
+
+permissions:
+  contents: read
+
+jobs:
+  publish-documentation:
+    name: Publish Documentation
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Build and Publish Documentation
+        uses: idealo/publish-techdocs-action@28feb7bcbcebafc1b0108d559d54f871d8c88fd0 # v3.17.0
+        with:
+          plantuml: true
